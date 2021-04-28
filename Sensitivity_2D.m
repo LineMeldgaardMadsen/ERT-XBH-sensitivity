@@ -18,9 +18,6 @@
 % grad(v_2D(x,z)) = 1/(2*pi) * (d/dx,d/dy,d/dz)( ln(r)+ln(r_im) )
 % where r and r_im are the distance fra the course and image source and to
 % the point (x,z)
-%
-% x is zero at the surface and negative downwards
-%
 
 clear all; clc; close all;
 
@@ -38,10 +35,6 @@ zmin = -4;  zmax = 0; %Note that zmax<=0
 %Define numer of nodes in the x and z-direction
 Nnx = 500;
 Nnz = 500;
-
-%Define calculation points of sensitivity (x,z)
-xs = linspace(-2,2,500);
-zs = linspace(-4,0,500);
 
 %% Check input
 if(A(2)>0); error('A(2) must be 0 or negative'); end
@@ -83,12 +76,16 @@ for jj = 1:length(zs) %z
     z = zs(jj);
 
     %Electric field from source
-    Ec_x = 1/(2*pi) * ( (r-x)/((r-x)^2+(t-z)^2) + (r-x)/((r-x)^2+(t+z)^2) );
-    Ec_z = 1/(2*pi) * ( (t-z)/((r-x)^2+(t-z)^2) + (t+z)/((r-x)^2+(t+z)^2) );
+    Ec_x = 1/(2*pi) * ( (r-x)/((r-x)^2+(t-z)^2) + ...
+                        (r-x)/((r-x)^2+(t+z)^2) );
+    Ec_z = 1/(2*pi) * ( (t-z)/((r-x)^2+(t-z)^2) + ...
+                        (t+z)/((r-x)^2+(t+z)^2) );
 
     %Electroc field from potential
-    Ep_x = 1/(2*pi) * ( (l-x)/(((l-x)^2+(n-z)^2)) + (l-x)/(((l-x)^2+(n+z)^2)) );        
-    Ep_z = 1/(2*pi) * ( (n-z)/(((l-x)^2+(n-z)^2)) + (n+z)/(((l-x)^2+(n+z)^2)) );
+    Ep_x = 1/(2*pi) * ( (l-x)/((l-x)^2+(n-z)^2) + ...
+                        (l-x)/((l-x)^2+(n+z)^2) );        
+    Ep_z = 1/(2*pi) * ( (n-z)/((l-x)^2+(n-z)^2) + ...
+                        (n+z)/((l-x)^2+(n+z)^2) );
 
     %Sensitivity
     S_2D(pole,ii,jj) = Ec_x*Ep_x + Ec_z*Ep_z;
